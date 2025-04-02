@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">LoginPrueba</string>
+<!--    menu -->
+    <string name="menu_title">Menú Principal</string>
+    <string name="folder_personal">Personal</string>
+    <string name="folder_trabajo">Trabajo</string>
+    <string name="folder_favoritos">Favoritos</string>
+    <string name="folder_add">+</string>
+<!--    -->
+    <!-- Este valor debe coincidir con el generado en Firebase para tu app -->
+    <string name="default_web_client_id">701289272243-s60adtfr8pjg7bso92og51q47ce5skp2.apps.googleusercontent.com</string>
+
+</resources>
