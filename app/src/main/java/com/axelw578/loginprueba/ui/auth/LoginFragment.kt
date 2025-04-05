@@ -16,7 +16,6 @@ import com.axelw578.loginprueba.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,7 +34,6 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    // ... (importaciones y demás código)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -70,7 +68,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-
     private fun signInWithGoogle() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -81,7 +78,6 @@ class LoginFragment : Fragment() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -94,7 +90,7 @@ class LoginFragment : Fragment() {
                     viewModel.signInWithGoogle(idToken) { user ->
                         if (user != null) {
                             Toast.makeText(requireContext(), "Bienvenido ${user.displayName}", Toast.LENGTH_SHORT).show()
-                            // Aquí navegas a HomeFragment
+                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                         } else {
                             Toast.makeText(requireContext(), "Error en Google Sign-In", Toast.LENGTH_SHORT).show()
                         }
