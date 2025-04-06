@@ -1,26 +1,36 @@
 package com.axelw578.loginprueba.ui.home
 
-import android.content.Intent
-import android.net.Uri
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.FileProvider
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.axelw578.loginprueba.databinding.FragmentHomeBinding
+import com.axelw578.loginprueba.ui.home.adapter.FileAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var folderAdapter: FolderAdapter
+    private lateinit var fileAdapter: FileAdapter
+
+    // Solicitar permiso para acceder al almacenamiento
+    private val permissionLauncher = registerForActivityResult(RequestPermission()) { granted ->
+        if (granted) {
+            viewModel.reloadFiles()
+        } else {
+            Toast.makeText(requireContext(), "Permiso denegado", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,36 +44,28 @@ class HomeFragment : Fragment() {
 
         binding.rvFolders.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.folders.observe(viewLifecycleOwner) { folderList ->
-            folderAdapter = FolderAdapter(folderList) { folder ->
-                viewModel.loadRootFolders(folder.path)
+        // Solicitar permisos (si es necesario)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // En Android 11+, si usas MANAGE_EXTERNAL_STORAGE, deberás manejarlo según tu lógica
+            viewModel.reloadFiles()
+        } else {
+            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
 
-                // Filtrar por tipos comunes de archivos
+        viewModel.folders.observe(viewLifecycleOwner) { folderList ->
+            fileAdapter = FileAdapter(requireContext(), folderList, onFolderClick = { folder ->
+                // Al hacer clic en una carpeta, mostramos archivos filtrados
+                viewModel.loadRootFolders(folder.path)
                 val extensions = listOf(".pdf", ".txt", ".png", ".jpg", ".mp4")
                 val files = viewModel.getFilteredFiles(folder.path, extensions)
-
                 if (files.isNotEmpty()) {
-                    val file = files.first() // Solo abrimos el primero como ejemplo
-                    val mimeType = viewModel.getMimeType(file) ?: "application/octet-stream"
-                    val uri: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        requireContext().packageName + ".provider",
-                        file
-                    )
-                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(uri, mimeType)
-                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    }
-                    try {
-                        startActivity(intent)
-                    } catch (e: Exception) {
-                        Toast.makeText(requireContext(), "No se puede abrir este archivo", Toast.LENGTH_SHORT).show()
-                    }
+                    // Abrir el primer archivo como ejemplo
+                    viewModel.openFile(requireContext(), files.first())
                 } else {
-                    Toast.makeText(requireContext(), "No hay archivos filtrados en ${folder.name}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No se encontraron archivos en ${folder.name}", Toast.LENGTH_SHORT).show()
                 }
-            }
-            binding.rvFolders.adapter = folderAdapter
+            })
+            binding.rvFolders.adapter = fileAdapter
         }
     }
 }

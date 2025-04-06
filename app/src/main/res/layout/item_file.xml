@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Nombre del archivo -->
+        <TextView
+            android:id="@+id/tvFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nombre del archivo"
+            android:textSize="16sp" />
+
+        <!-- Tipo MIME o extensión -->
+        <TextView
+            android:id="@+id/tvMimeType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo"
+            android:paddingStart="8dp"
+            android:textSize="14sp" />
+
+        <!-- Botón para abrir el archivo -->
+        <Button
+            android:id="@+id/btnOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Abrir" />
+
+        <!-- Botón para renombrar -->
+        <Button
+            android:id="@+id/btnRename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Renombrar"
+            android:layout_marginStart="8dp" />
+
+        <!-- Botón para eliminar -->
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eliminar"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+</layout>

@@ -1,21 +1,21 @@
 package com.axelw578.loginprueba.data.repository
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import androidx.documentfile.provider.DocumentFile
+import androidx.core.content.FileProvider
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
-import java.net.URLConnection
 import javax.inject.Inject
 import javax.inject.Singleton
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Singleton
 class FileRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    // Método para listar todos los archivos en un directorio usando java.io.File
-    fun listFilesInDirectory(path: String): List<File> {
+    // Lista todos los archivos y directorios de un path usando java.io.File
+    fun listFilesAndDirectories(path: String): List<File> {
         val directory = File(path)
         return if (directory.exists() && directory.isDirectory) {
             directory.listFiles()?.toList() ?: emptyList()
@@ -24,24 +24,7 @@ class FileRepository @Inject constructor(
         }
     }
 
-    // Método para listar solo directorios en un camino dado
-    fun listDirectoriesInPath(path: String): List<File> {
-        val directory = File(path)
-        return directory.listFiles()?.filter { it.isDirectory } ?: emptyList()
-    }
-
-    // Método para listar archivos y carpetas usando SAF (DocumentFile)
-    fun listFilesWithDocumentFile(uri: Uri): List<DocumentFile> {
-        val documentFile = DocumentFile.fromTreeUri(context, uri)
-        return documentFile?.listFiles()?.toList() ?: emptyList()
-    }
-
-    // Obtener el MIME type de un archivo (a partir de su nombre)
-    fun getMimeType(file: File): String? {
-        return URLConnection.guessContentTypeFromName(file.name)
-    }
-
-    // Listar archivos en un directorio filtrados por extensiones (por ejemplo, [".pdf", ".png", ".txt", ".mp4"])
+    // Filtra archivos por extensiones
     fun listFilesByExtensions(path: String, extensions: List<String>): List<File> {
         val directory = File(path)
         return if (directory.exists() && directory.isDirectory) {
@@ -51,5 +34,35 @@ class FileRepository @Inject constructor(
         } else {
             emptyList()
         }
+    }
+
+    // Obtiene el MIME type basado en la extensión
+    fun getMimeType(file: File): String? {
+        return android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+    }
+
+    // Crea un Intent para abrir un archivo con FileProvider
+    fun getOpenFileIntent(file: File): Intent? {
+        val uri: Uri = FileProvider.getUriForFile(
+            context,
+            context.packageName + ".provider",
+            file
+        )
+        val mimeType = getMimeType(file) ?: "application/octet-stream"
+        return Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+    }
+
+    // Eliminar un archivo
+    fun deleteFile(file: File): Boolean {
+        return file.delete()
+    }
+
+    // Renombrar un archivo
+    fun renameFile(file: File, newName: String): Boolean {
+        val newFile = File(file.parent, newName)
+        return file.renameTo(newFile)
     }
 }

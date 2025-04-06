@@ -6,6 +6,8 @@
 
     <!-- Permisos necesarios para acceder a archivos -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+
     <!-- Si necesitas acceso total a archivos en Android 11+ (MANAGE_EXTERNAL_STORAGE requiere justificación y configuración adicional) -->
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
