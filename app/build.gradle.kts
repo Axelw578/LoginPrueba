@@ -61,7 +61,12 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.play.services.auth)
-
+    implementation (libs.commons.compress)
+//     Glide,
+    implementation (libs.glide)
+    ksp (libs.ksp)
+//
+    // AndroidPdfViewer para ver PDFs
 
     implementation(libs.googleid)
     implementation(libs.firebase.database)
@@ -76,7 +81,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.androidx.room.compiler)
-
+// hilt
     implementation(libs.hilt.android)
     ksp(libs.androidx.room.compiler.v260)
     ksp(libs.dagger.compiler)
@@ -90,7 +95,6 @@ dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     // LiveData
     implementation (libs.lifecycle.livedata.ktx)
-
     //Corrutinas
     implementation (libs.kotlinx.coroutines.android)
 }

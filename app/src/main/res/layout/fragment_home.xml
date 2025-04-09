@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!-- Aquí puedes declarar variables de binding si las necesitas -->
+        <!-- Si necesitas variables de binding, decláralas acá -->
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,35 +14,44 @@
         android:background="@color/backgroundColor"
         tools:context=".ui.home.HomeFragment">
 
-        <!-- Título del menú -->
+        <!-- Breadcrumb o path actual (opcional) -->
         <TextView
-            android:id="@+id/tvMenuTitle"
+            android:id="@+id/tvCurrentPath"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/menu_title"
+            android:text="Directorio actual"
+            android:textSize="16sp"
             android:textColor="@color/textColorPrimary"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="16dp"
+            android:padding="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Botón para seleccionar carpeta -->
+        <!-- Botón para retroceder en la navegación -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atrás"
+            app:layout_constraintTop_toBottomOf="@id/tvCurrentPath"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Botón para seleccionar carpeta raíz mediante SAF -->
         <Button
             android:id="@+id/btnPickFolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Seleccionar Carpeta"
-            app:layout_constraintTop_toBottomOf="@id/tvMenuTitle"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCurrentPath"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp" />
 
-        <!-- RecyclerView para mostrar las carpetas y archivos -->
+        <!-- RecyclerView para listar los ítems (archivos y carpetas) -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFolders"
+            android:id="@+id/rvFiles"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"
